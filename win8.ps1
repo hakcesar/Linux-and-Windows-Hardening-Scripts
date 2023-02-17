@@ -9,7 +9,7 @@ netsh advfirewall set currentprofile state on
 
 # Enable Windows Defender
 
-Set-MpPreference -DisableRealtimeMonitoring $false
+# Set-MpPreference -DisableRealtimeMonitoring $false
 
 # Enumerate all users and passwords into a file
 

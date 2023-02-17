@@ -26,10 +26,12 @@ $users = Get-WmiObject -Class Win32_UserAccount | Where-Object { $_.Name -ne "Ad
 $specialChars = '@#$%&!?:*^-+=<>~'
 
 foreach ($user in $users) {
+
 # Generate a strong, complex password
 
 $password = [System.Web.Security.Membership]::GeneratePassword(24, 10)
-Add special characters to the password
+
+# Add special characters to the password
 
 for ($i = 0; $i -lt 3; $i++) {
 $password = $password.Insert([int](Get-Random -Minimum 0 -Maximum ($password.Length - 1)), $specialChars[Get-Random -Minimum 0 -Maximum ($specialChars.Length - 1)])

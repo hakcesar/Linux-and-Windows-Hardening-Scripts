@@ -28,19 +28,18 @@ $specialChars = '@#$%&!?:*^-+=<>~'
 foreach ($user in $users) {
 
 # Generate a strong, complex password
-
-$password = [System.Web.Security.Membership]::GeneratePassword(24, 10)
+    $password = [System.Web.Security.Membership]::GeneratePassword(24, 10)
 
 # Add special characters to the password
+    for ($i = 0; $i -lt 3; $i++) {
+        $password = $password.Insert([int](Get-Random -Minimum 0 -Maximum ($password.Length - 1)), $specialChars[Get-Random -Minimum 0 -Maximum ($specialChars.Length - 1)])
+    }
 
-for ($i = 0; $i -lt 3; $i++) {
-$password = $password.Insert([int](Get-Random -Minimum 0 -Maximum ($password.Length - 1)), $specialChars[Get-Random -Minimum 0 -Maximum ($specialChars.Length - 1)])
-}
-
-# Update the users password
-
-$secureString = ConvertTo-SecureString $password -AsPlainText -Force
-([adsi]"WinNT://localhost/$($user.Name),user").psbase.invoke("SetPassword",$secureString)
+# Update the user password
+    $secureString = ConvertTo-SecureString $password -AsPlainText -Force
+    $userPath = "WinNT://" + $env:COMPUTERNAME + "/" + $user.Name
+    $userObject = [adsi]$userPath
+    $userObject.psbase.invoke("SetPassword", $password)
 }
 
 # Create a document of the new passwords
